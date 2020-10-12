@@ -26,8 +26,8 @@ app.use(session);
 app.use(passportConfig);
 
 app.use((req, _, next) => {
-  req.currentUser = req.session.user
-  next()
+    req.currentUser = req.session.user
+    next()
 })
 
 /**
@@ -37,33 +37,33 @@ const router = require('./config/routes.js');
 app.use('/', router);
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  next(createError(404));
+app.use(function(req, res, next) {
+    next(createError(404));
 });
 
 // error handler
-app.use(function (error, req, res, next) {
-  console.error('-' * 1000)
-  console.error(error);
+app.use(function(error, req, res, next) {
+    console.error('-' * 1000)
+    console.error(error);
 
-  res.status(error.status || 500);
+    res.status(error.status || 500);
 
-  const data = {}
+    const data = {}
 
-  if (error instanceof mongoose.Error.ValidationError) {
-    res.status(400);
+    if (error instanceof mongoose.Error.ValidationError) {
+        res.status(400);
 
-    for (field of Object.keys(error.errors)) {
-      error.errors[field] = error.errors[field].message
+        for (field of Object.keys(error.errors)) {
+            error.errors[field] = error.errors[field].message
+        }
+
+        data.errors = error.errors
+    } else if (error instanceof mongoose.Error.CastError) {
+        error = createError(404, 'Resource not found')
     }
 
-    data.errors = error.errors
-  } else if (error instanceof mongoose.Error.CastError) {
-    error = createError(404, 'Resource not found')
-  }
-
-  data.message = error.message;
-  res.json(data);
+    data.message = error.message;
+    res.json(data);
 });
 
 /** 
@@ -71,7 +71,7 @@ app.use(function (error, req, res, next) {
  */
 const port = normalizePort(process.env.PORT || '3010');
 app.listen(port, () => {
-  console.log(`Listening on port ${port}`);
+    console.log(`Listening on port ${port}`);
 });
 
 // Helper functions
@@ -80,17 +80,17 @@ app.listen(port, () => {
  * Normalize a port into a number, string, or false.
  */
 function normalizePort(val) {
-  const port = parseInt(val, 10);
+    const port = parseInt(val, 10);
 
-  if (isNaN(port)) {
-    // named pipe
-    return val;
-  }
+    if (isNaN(port)) {
+        // named pipe
+        return val;
+    }
 
-  if (port >= 0) {
-    // port number
-    return port;
-  }
+    if (port >= 0) {
+        // port number
+        return port;
+    }
 
-  return false;
+    return false;
 }
